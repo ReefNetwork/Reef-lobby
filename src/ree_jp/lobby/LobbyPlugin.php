@@ -4,7 +4,6 @@ namespace ree_jp\lobby;
 
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\item\ItemFactory;
-use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\TransferPacket;
 use pocketmine\player\Player;
@@ -12,14 +11,19 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 use ree_jp\lobby\item\ServerSelector;
+use ree_jp\lobby\item\Setting;
 
 class LobbyPlugin extends PluginBase
 {
+    static KeyValueStore $store;
 
     public function onEnable(): void
     {
+        self::$store = new KeyValueStore($this->getScheduler());
+
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         ItemFactory::getInstance()->register(new ServerSelector(), true);
+        ItemFactory::getInstance()->register(new Setting(), true);
 
         $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (): void {
             $this->onCheck();
