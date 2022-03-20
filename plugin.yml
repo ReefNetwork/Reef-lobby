@@ -1,5 +1,5 @@
 name: ReefLobby
 api: 4.0.0
-main: ree_jp/lobby/LobbyPlugin
+main: ree_jp\lobby\LobbyPlugin
 version: 1.0.0
 author: ree-jp
