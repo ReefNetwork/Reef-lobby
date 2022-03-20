@@ -38,7 +38,7 @@ class LobbyPlugin extends PluginBase
     private function onCheck(): void
     {
         foreach (Server::getInstance()->getOnlinePlayers() as $p) {
-            if ($p->isAdventure() && !$this->checkDistance($p->getPosition())) {
+            if (!$this->checkDistance($p->getPosition())) {
                 $p->teleport($p->getWorld()->getSpawnLocation());
             }
 

@@ -4,6 +4,9 @@ namespace ree_jp\lobby;
 
 use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\VanillaEffects;
+use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockBurnEvent;
+use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
@@ -22,7 +25,7 @@ class EventListener implements Listener
 
         $ev->getPlayer()->getInventory()->setItem(0, ItemFactory::getInstance()->get(ItemIds::COMPASS)->setCustomName("サーバー選択"));
         $ev->getPlayer()->getInventory()->setItem(8, ItemFactory::getInstance()->get(ItemIds::NETHER_STAR)->setCustomName("設定"));
-        $ev->getPlayer()->getEffects()->add(new EffectInstance(VanillaEffects::SATURATION(), 99999999));
+        $ev->getPlayer()->getHungerManager()->setEnabled(false);
     }
 
     public function onDamage(EntityDamageEvent $ev): void
@@ -42,20 +45,33 @@ class EventListener implements Listener
         }
     }
 
-    /**
-     * @priority MONITOR
-     */
     public function onTouch(PlayerInteractEvent $ev): void
     {
         $item = $ev->getItem();
         if ($item instanceof LobbyItem) {
             $item->onActive($ev->getPlayer());
         }
+        $ev->cancel();
+    }
+
+    public function onBreak(BlockBreakEvent $ev): void
+    {
+        if ($ev->getPlayer()->isSurvival()) $ev->cancel();
+    }
+
+    public function onPlace(BlockPlaceEvent $ev): void
+    {
+        if ($ev->getPlayer()->isSurvival()) $ev->cancel();
+    }
+
+    public function onBurn(BlockBurnEvent $ev): void
+    {
+        $ev->cancel();
     }
 
     public function onTransaction(InventoryTransactionEvent $ev): void
     {
-        if ($ev->getTransaction()->getSource()->isAdventure()) {
+        if ($ev->getTransaction()->getSource()->isSurvival()) {
             $ev->cancel();
         }
     }
