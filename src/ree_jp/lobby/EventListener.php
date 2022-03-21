@@ -51,7 +51,7 @@ class EventListener implements Listener
         if ($item instanceof LobbyItem) {
             $item->onActive($ev->getPlayer());
         }
-        $ev->cancel();
+        if ($ev->getPlayer()->isSurvival()) $ev->cancel();
     }
 
     public function onBreak(BlockBreakEvent $ev): void
