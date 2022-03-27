@@ -11,12 +11,17 @@
   ],
   "require": {
     "pocketmine/pocketmine-mp": "4.1.*",
+    "reefnetwork/reef-edge": "dev-master",
     "bbo51dog/bboform": "2.0.*"
   },
   "repositories": [
     {
       "type": "vcs",
       "url": "https://github.com/pmmp/PocketMine-MP.git"
+    },
+    {
+      "type": "git",
+      "url": "https://github.com/ReefNetwork/Reef-Edge.git"
     },
     {
       "type": "git",

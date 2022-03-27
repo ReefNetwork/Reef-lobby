@@ -12,6 +12,7 @@ use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\player\Player;
@@ -23,9 +24,16 @@ class EventListener implements Listener
     {
         LobbyPlugin::$store->clearALl($ev->getPlayer()->getXuid());
 
-        $ev->getPlayer()->getInventory()->setItem(0, ItemFactory::getInstance()->get(ItemIds::COMPASS)->setCustomName("サーバー選択"));
-        $ev->getPlayer()->getInventory()->setItem(8, ItemFactory::getInstance()->get(ItemIds::NETHER_STAR)->setCustomName("設定"));
+        $ev->getPlayer()->getInventory()->setItem(0, $this->reflectionCustomItemName(ItemIds::COMPASS));
+        $ev->getPlayer()->getInventory()->setItem(1, $this->reflectionCustomItemName(ItemIds::BOOK));
+        $ev->getPlayer()->getInventory()->setItem(8, $this->reflectionCustomItemName(ItemIds::NETHER_STAR));
         $ev->getPlayer()->getHungerManager()->setEnabled(false);
+    }
+
+    private function reflectionCustomItemName(int $id): Item
+    {
+        $item = ItemFactory::getInstance()->get($id);
+        return $item->setCustomName($item->getName());
     }
 
     public function onDamage(EntityDamageEvent $ev): void
