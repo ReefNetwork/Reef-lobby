@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "pocketmine/pocketmine-mp": "4.1.*",
+    "pocketmine/pocketmine-mp": "4.2.*",
     "reefnetwork/reef-edge": "dev-master",
     "bbo51dog/bboform": "2.0.*"
   },
