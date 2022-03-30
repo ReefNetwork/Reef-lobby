@@ -10,6 +10,7 @@ use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
+use ree_jp\lobby\item\PlayerList;
 use ree_jp\lobby\item\ServerSelector;
 use ree_jp\lobby\item\Setting;
 use ree_jp\lobby\item\WPViewer;
@@ -24,8 +25,9 @@ class LobbyPlugin extends PluginBase
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         ItemFactory::getInstance()->register(new ServerSelector(), true);
-        ItemFactory::getInstance()->register(new Setting(), true);
         ItemFactory::getInstance()->register(new WPViewer(), true);
+        ItemFactory::getInstance()->register(new PlayerList(), true);
+        ItemFactory::getInstance()->register(new Setting(), true);
 
         $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (): void {
             $this->onCheck();

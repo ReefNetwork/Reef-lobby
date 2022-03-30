@@ -26,13 +26,14 @@ class EventListener implements Listener
 
         $ev->getPlayer()->getInventory()->setItem(0, $this->reflectionCustomItemName(ItemIds::COMPASS));
         $ev->getPlayer()->getInventory()->setItem(1, $this->reflectionCustomItemName(ItemIds::BOOK));
+        $ev->getPlayer()->getInventory()->setItem(3, $this->reflectionCustomItemName(ItemIds::MOB_HEAD, 3));
         $ev->getPlayer()->getInventory()->setItem(8, $this->reflectionCustomItemName(ItemIds::NETHER_STAR));
         $ev->getPlayer()->getHungerManager()->setEnabled(false);
     }
 
-    private function reflectionCustomItemName(int $id): Item
+    private function reflectionCustomItemName(int $id, int $meta = 0): Item
     {
-        $item = ItemFactory::getInstance()->get($id);
+        $item = ItemFactory::getInstance()->get($id, $meta);
         return $item->setCustomName($item->getName());
     }
 
