@@ -10,11 +10,11 @@ use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use ree_jp\lobby\LobbyPlugin;
 
-class PlayerList extends LobbyItem
+class Friends extends LobbyItem
 {
     public function __construct()
     {
-        parent::__construct(new ItemIdentifier(ItemIds::PAPER,0), "オンラインのプレイヤー");
+        parent::__construct(new ItemIdentifier(ItemIds::MOB_HEAD, 3), "フレンド");
     }
 
     public function onInteractBlock(Player $player, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector): ItemUseResult
@@ -30,8 +30,8 @@ class PlayerList extends LobbyItem
     static function onActive(Player $p): ItemUseResult
     {
         if (!LobbyPlugin::$store->hasValue($p->getXuid(), "form")) {
-            $p->getServer()->dispatchCommand($p, "exe-p list");
-            LobbyPlugin::$store->setValue($p->getXuid(), "form", 20);
+            $p->sendMessage("実装してない");
+            LobbyPlugin::$store->setValue($p->getXuid(), "form", 10);
         }
         return ItemUseResult::SUCCESS();
     }
