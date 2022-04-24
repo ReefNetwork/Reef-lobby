@@ -31,7 +31,7 @@ class Setting extends LobbyItem
     static function onActive(Player $p): ItemUseResult
     {
         if (!LobbyPlugin::$store->hasValue($p->getXuid(), "form")) {
-            $p->sendMessage("実装してない");
+            $p->getServer()->dispatchCommand($p, "exe-p setting");
             LobbyPlugin::$store->setValue($p->getXuid(), "form", 10);
         }
         return ItemUseResult::SUCCESS();
