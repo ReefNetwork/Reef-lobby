@@ -52,16 +52,10 @@ class LobbyPlugin extends PluginBase
                 $block = $p->getWorld()->getBlock($p->getPosition()->subtract(0, 2, 0));
                 switch ($block->getId()) {
                     case 1:
-                        $this->transfer($p, "整地1");
+                        $this->transfer($p, "さくらサーバー");
                         break;
                     case 2:
-                        $this->transfer($p, "整地2");
-                        break;
-                    case 3:
-                        $this->transfer($p, "整地1サブ回線");
-                        break;
-                    case 10:
-                        $this->transfer($p, "158.101.103.240", 19134);
+                        $this->transfer($p, "もみじサーバー");
                         break;
                 }
             }
