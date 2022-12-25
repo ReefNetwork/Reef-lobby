@@ -12,26 +12,30 @@ use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
+use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use ree_jp\lobby\item\LobbyItem;
 
 class EventListener implements Listener
 {
-    public function onJoin(PlayerJoinEvent $ev): void
+    public function onLogin(PlayerLoginEvent $ev): void
     {
-        LobbyPlugin::$store->clearALl($ev->getPlayer()->getXuid());
+        $p = $ev->getPlayer();
+        LobbyPlugin::$store->clearALl($p->getXuid());
 
-        $ev->getPlayer()->getInventory()->setItem(0, $this->reflectionCustomItemName(ItemIds::COMPASS));
-        $ev->getPlayer()->getInventory()->setItem(1, $this->reflectionCustomItemName(ItemIds::BOOK));
-        $ev->getPlayer()->getInventory()->setItem(2, $this->reflectionCustomItemName(ItemIds::PAPER));
-        $ev->getPlayer()->getInventory()->setItem(7, $this->reflectionCustomItemName(ItemIds::MOB_HEAD, 3));
-        $ev->getPlayer()->getInventory()->setItem(8, $this->reflectionCustomItemName(ItemIds::NETHER_STAR));
-        $ev->getPlayer()->getHungerManager()->setEnabled(false);
+        $p->getInventory()->setItem(0, $this->reflectionCustomItemName(ItemIds::COMPASS));
+        $p->getInventory()->setItem(1, $this->reflectionCustomItemName(ItemIds::BOOK));
+        $p->getInventory()->setItem(2, $this->reflectionCustomItemName(ItemIds::PAPER));
+        $p->getInventory()->setItem(7, $this->reflectionCustomItemName(ItemIds::MOB_HEAD, 3));
+        $p->getInventory()->setItem(8, $this->reflectionCustomItemName(ItemIds::NETHER_STAR));
+        $p->getHungerManager()->setEnabled(false);
 
-        $ev->getPlayer()->getServer()->dispatchCommand($ev->getPlayer(), "exe-p sp-form welcome_info");
+        $p->getServer()->dispatchCommand($ev->getPlayer(), "exe-p sp-form welcome_info");
+        $p->teleport(new Vector3(255.5 + mt_rand(-1,1),68,256.5+mt_rand(-1,1)));
     }
 
     private function reflectionCustomItemName(int $id, int $meta = 0): Item
