@@ -31,7 +31,7 @@ class EventListener implements Listener
         $ev->getPlayer()->getInventory()->setItem(8, $this->reflectionCustomItemName(ItemIds::NETHER_STAR));
         $ev->getPlayer()->getHungerManager()->setEnabled(false);
 
-        $ev->getPlayer()->getServer()->dispatchCommand($ev->getPlayer(), "exe-p wp-view");
+        $ev->getPlayer()->getServer()->dispatchCommand($ev->getPlayer(), "exe-p sp-form welcome_info");
     }
 
     private function reflectionCustomItemName(int $id, int $meta = 0): Item
