@@ -34,8 +34,12 @@ class EventListener implements Listener
         $p->getInventory()->setItem(8, $this->reflectionCustomItemName(ItemIds::NETHER_STAR));
         $p->getHungerManager()->setEnabled(false);
 
-        $p->getServer()->dispatchCommand($ev->getPlayer(), "exe-p sp-form welcome_info");
-        $p->teleport(new Vector3(255.5 + mt_rand(-1,1),68,256.5+mt_rand(-1,1)));
+        $p->teleport(new Vector3(255.5 + mt_rand(-1, 1), 68, 256.5 + mt_rand(-1, 1)));
+    }
+
+    public function onJoin(PlayerJoinEvent $ev): void
+    {
+        $ev->getPlayer()->getServer()->dispatchCommand($ev->getPlayer(), "exe-p sp-form welcome_info");
     }
 
     private function reflectionCustomItemName(int $id, int $meta = 0): Item
