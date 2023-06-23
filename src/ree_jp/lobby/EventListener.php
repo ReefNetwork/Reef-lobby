@@ -2,6 +2,8 @@
 
 namespace ree_jp\lobby;
 
+use pocketmine\block\utils\MobHeadType;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\VanillaEffects;
 use pocketmine\event\block\BlockBreakEvent;
@@ -11,14 +13,14 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\player\PlayerItemUseEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\item\Item;
-use pocketmine\item\ItemFactory;
-use pocketmine\item\ItemIds;
+use pocketmine\item\ItemUseResult;
+use pocketmine\item\VanillaItems;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
-use ree_jp\lobby\item\LobbyItem;
 
 class EventListener implements Listener
 {
@@ -27,11 +29,11 @@ class EventListener implements Listener
         $p = $ev->getPlayer();
         LobbyPlugin::$store->clearALl($p->getXuid());
 
-        $p->getInventory()->setItem(0, $this->reflectionCustomItemName(ItemIds::COMPASS));
-        $p->getInventory()->setItem(1, $this->reflectionCustomItemName(ItemIds::BOOK));
-        $p->getInventory()->setItem(2, $this->reflectionCustomItemName(ItemIds::PAPER));
-        $p->getInventory()->setItem(7, $this->reflectionCustomItemName(ItemIds::MOB_HEAD, 3));
-        $p->getInventory()->setItem(8, $this->reflectionCustomItemName(ItemIds::NETHER_STAR));
+        $p->getInventory()->setItem(0, VanillaItems::CLOCK()->setCustomName("サーバーを選択"));
+        $p->getInventory()->setItem(1, VanillaItems::BOOK()->setCustomName("最新情報"));
+        $p->getInventory()->setItem(2, VanillaItems::PAPER()->setCustomName("オンラインのプレイヤー"));
+        $p->getInventory()->setItem(7, VanillaBlocks::MOB_HEAD()->setMobHeadType(MobHeadType::PLAYER())->asItem()->setCustomName("フレンド"));
+        $p->getInventory()->setItem(8, VanillaItems::NETHER_STAR()->setCustomName("設定"));
         $p->getHungerManager()->setEnabled(false);
 
         $p->teleport(new Vector3(255.5 + mt_rand(-1, 1), 68, 256.5 + mt_rand(-1, 1)));
@@ -42,9 +44,8 @@ class EventListener implements Listener
         $ev->getPlayer()->getServer()->dispatchCommand($ev->getPlayer(), "exe-p sp-form welcome_info");
     }
 
-    private function reflectionCustomItemName(int $id, int $meta = 0): Item
+    private function reflectionCustomItemName(Item $item): Item
     {
-        $item = ItemFactory::getInstance()->get($id, $meta);
         return $item->setCustomName($item->getName());
     }
 
@@ -67,11 +68,37 @@ class EventListener implements Listener
 
     public function onTouch(PlayerInteractEvent $ev): void
     {
-        $item = $ev->getItem();
-        if ($item instanceof LobbyItem) {
-            $item->onActive($ev->getPlayer());
-        }
+        $this->activeItem($ev->getItem(), $ev->getPlayer());
         if ($ev->getPlayer()->isSurvival()) $ev->cancel();
+    }
+
+    public function onUse(PlayerItemUseEvent $ev): void
+    {
+        $this->activeItem($ev->getItem(), $ev->getPlayer());
+    }
+
+    private function activeItem(Item $item, Player $p): void
+    {
+        if (LobbyPlugin::$store->hasValue($p->getXuid(), "use-item")) return;
+        LobbyPlugin::$store->setValue($p->getXuid(), "use-item", 10);
+
+        switch ($item->getTypeId()) {
+            case VanillaItems::COMPASS()->getTypeId():
+                $p->getServer()->dispatchCommand($p, "exe-p server-select");
+                break;
+            case VanillaItems::BOOK()->getTypeId():
+                $p->getServer()->dispatchCommand($p, "exe-p wp-view");
+                break;
+            case VanillaItems::PAPER()->getTypeId():
+                $p->getServer()->dispatchCommand($p, "exe-p list");
+                break;
+            case VanillaBlocks::MOB_HEAD()->setMobHeadType(MobHeadType::PLAYER())->asItem()->getTypeId():
+                $p->sendMessage("実装してない");
+                break;
+            case VanillaItems::NETHER_STAR()->getTypeId():
+                $p->getServer()->dispatchCommand($p, "exe-p setting");
+                break;
+        }
     }
 
     public function onBreak(BlockBreakEvent $ev): void

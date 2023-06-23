@@ -9,9 +9,9 @@
       "email": "mail@ree-jp.net"
     }
   ],
-  "require": {
-    "pocketmine/pocketmine-mp": "4.2.*",
-    "reefnetwork/reef-edge": "dev-master",
+  "require-dev": {
+    "pocketmine/pocketmine-mp": "^5.1.2",
+    "reefnetwork/reef-edge": "dev-pm5",
     "bbo51dog/bboform": "2.0.*"
   },
   "repositories": [

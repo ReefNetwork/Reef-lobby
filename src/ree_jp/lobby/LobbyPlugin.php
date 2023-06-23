@@ -2,19 +2,14 @@
 
 namespace ree_jp\lobby;
 
-use pocketmine\block\BlockLegacyIds;
-use pocketmine\item\ItemFactory;
+use pocketmine\block\utils\DyeColor;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\TransferPacket;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
-use ree_jp\lobby\item\Friends;
-use ree_jp\lobby\item\PlayerList;
-use ree_jp\lobby\item\ServerSelector;
-use ree_jp\lobby\item\Setting;
-use ree_jp\lobby\item\WPViewer;
 
 class LobbyPlugin extends PluginBase
 {
@@ -25,11 +20,6 @@ class LobbyPlugin extends PluginBase
         self::$store = new KeyValueStore($this->getScheduler());
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
-        ItemFactory::getInstance()->register(new ServerSelector(), true);
-        ItemFactory::getInstance()->register(new WPViewer(), true);
-        ItemFactory::getInstance()->register(new PlayerList(), true);
-        ItemFactory::getInstance()->register(new Friends(), true);
-        ItemFactory::getInstance()->register(new Setting(), true);
 
         $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (): void {
             $this->onCheck();
@@ -48,13 +38,13 @@ class LobbyPlugin extends PluginBase
                 $p->teleport($p->getWorld()->getSpawnLocation());
             }
 
-            if ($p->getWorld()->getBlock($p->getPosition())->getId() === BlockLegacyIds::PORTAL) {
+            if ($p->getWorld()->getBlock($p->getPosition())->getTypeId() === VanillaBlocks::NETHER_PORTAL()->getTypeId()) {
                 $block = $p->getWorld()->getBlock($p->getPosition()->subtract(0, 2, 0));
-                switch ($block->getId()) {
-                    case 1:
+                switch ($block->getTypeId()) {
+                    case VanillaBlocks::WOOL()->setColor(DyeColor::PINK()):
                         $this->transfer($p, "さくらサーバー");
                         break;
-                    case 2:
+                    case VanillaBlocks::WOOL()->setColor(DyeColor::ORANGE()):
                         $this->transfer($p, "もみじサーバー");
                         break;
                 }
