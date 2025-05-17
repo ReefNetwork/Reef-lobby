@@ -23,7 +23,7 @@ jobs:
         run: php -dphar.readonly=0 ./build/make-phar.php enableCompressAll
 
       - name: upload
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4.0.0
         with:
           name: PMMPPlugin
           path: ./PMMPPlugin.phar
